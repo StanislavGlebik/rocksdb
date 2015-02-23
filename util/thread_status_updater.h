@@ -38,8 +38,11 @@
 
 #include "rocksdb/status.h"
 #include "rocksdb/thread_status.h"
-#include "port/port_posix.h"
+#include "port/port.h"
 #include "util/thread_operation.h"
+
+// TODO(stash): remove it
+#undef ROCKSDB_USING_THREAD_STATUS
 
 namespace rocksdb {
 

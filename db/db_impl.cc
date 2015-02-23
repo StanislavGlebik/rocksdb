@@ -3685,7 +3685,12 @@ Status DBImpl::GetDbIdentity(std::string& identity) {
   if (!s.ok()) {
     return s;
   }
-  char buffer[file_size];
+
+  #if !defined(_MSC_VER)
+    char buffer[file_size];
+  #else
+    char* buffer = static_cast<char*>(alloca(file_size));
+  #endif
   Slice id;
   s = idfile->Read(static_cast<size_t>(file_size), &id, buffer);
   if (!s.ok()) {
@@ -4040,7 +4045,7 @@ void DBImpl::EraseThreadStatusDbInfo() const {
 //
 // A global method that can dump out the build version
 void DumpRocksDBBuildVersion(Logger * log) {
-#if !defined(IOS_CROSS_COMPILE)
+#if !defined(IOS_CROSS_COMPILE) && !defined(ROCKSDB_PLATFORM_WIN)
   // if we compile with Xcode, we don't run build_detect_vesion, so we don't
   // generate util/build_version.cc
   Log(InfoLogLevel::INFO_LEVEL, log,

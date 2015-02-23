@@ -58,6 +58,14 @@ class LogFile {
 struct BatchResult {
   SequenceNumber sequence = 0;
   std::unique_ptr<WriteBatch> writeBatchPtr;
+
+  BatchResult() = default;
+
+  BatchResult(BatchResult&& batchResult)
+  {
+    sequence = batchResult.sequence;
+    writeBatchPtr.swap(batchResult.writeBatchPtr);
+  }
 };
 
 // A TransactionLogIterator is used to iterate over the transactions in a db.

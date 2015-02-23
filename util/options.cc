@@ -16,6 +16,7 @@
 
 #include <inttypes.h>
 #include <limits>
+#include <functional>
 
 #include "db/writebuffer.h"
 #include "rocksdb/cache.h"

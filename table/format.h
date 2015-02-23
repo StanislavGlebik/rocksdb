@@ -181,6 +181,14 @@ struct BlockContents {
 
   BlockContents() : cachable(false), compression_type(kNoCompression) {}
 
+  BlockContents(BlockContents&& blockContents)
+  {
+    data = blockContents.data;
+    cachable = blockContents.cachable;
+    compression_type = blockContents.compression_type;
+    allocation.swap(blockContents.allocation);
+  }
+
   BlockContents(const Slice& _data, bool _cachable,
                 CompressionType _compression_type)
       : data(_data), cachable(_cachable), compression_type(_compression_type) {}
@@ -191,6 +199,8 @@ struct BlockContents {
         cachable(_cachable),
         compression_type(_compression_type),
         allocation(std::move(_data)) {}
+
+  BlockContents& operator=(const BlockContents&);
 };
 
 // Read the block identified by "handle" from "file".  On failure

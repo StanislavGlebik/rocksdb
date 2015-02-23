@@ -1051,7 +1051,12 @@ Compaction* UniversalCompactionPicker::PickCompactionUniversalReadAmp(
     // first candidate to be compacted.
     uint64_t candidate_size =  f != nullptr? f->compensated_file_size : 0;
     if (f != nullptr) {
+#if !defined(_MSC_VER)
       char file_num_buf[kFormatFileNumberBufSize];
+#else
+      char* file_num_buf = static_cast<char*>(alloca(kFormatFileNumberBufSize));
+#endif
+
       FormatFileNumber(f->fd.GetNumber(), f->fd.GetPathId(), file_num_buf,
                        sizeof(file_num_buf));
       LogToBuffer(log_buffer, "[%s] Universal: Possible candidate file %s[%d].",
@@ -1149,7 +1154,12 @@ Compaction* UniversalCompactionPicker::PickCompactionUniversalReadAmp(
   for (unsigned int i = start_index; i < first_index_after; i++) {
     FileMetaData* picking_file = files[i];
     c->inputs_[0].files.push_back(picking_file);
+#if !defined(_MSC_VER)
     char file_num_buf[kFormatFileNumberBufSize];
+#else
+    char* file_num_buf = static_cast<char*>(alloca(kFormatFileNumberBufSize));
+#endif
+
     FormatFileNumber(picking_file->fd.GetNumber(), picking_file->fd.GetPathId(),
                      file_num_buf, sizeof(file_num_buf));
     LogToBuffer(log_buffer,
@@ -1192,7 +1202,12 @@ Compaction* UniversalCompactionPicker::PickCompactionUniversalSizeAmp(
       start_index = loop;         // Consider this as the first candidate.
       break;
     }
+#if !defined(_MSC_VER)
     char file_num_buf[kFormatFileNumberBufSize];
+#else
+    char* file_num_buf = static_cast<char*>(alloca(kFormatFileNumberBufSize));
+#endif
+
     FormatFileNumber(f->fd.GetNumber(), f->fd.GetPathId(), file_num_buf,
                      sizeof(file_num_buf));
     LogToBuffer(log_buffer, "[%s] Universal: skipping file %s[%d] compacted %s",
@@ -1205,7 +1220,12 @@ Compaction* UniversalCompactionPicker::PickCompactionUniversalSizeAmp(
     return nullptr;             // no candidate files
   }
 
+#if !defined(_MSC_VER)
   char file_num_buf[kFormatFileNumberBufSize];
+#else
+  char* file_num_buf = static_cast<char*>(alloca(kFormatFileNumberBufSize));
+#endif
+
   FormatFileNumber(f->fd.GetNumber(), f->fd.GetPathId(), file_num_buf,
                    sizeof(file_num_buf));
   LogToBuffer(log_buffer, "[%s] Universal: First candidate file %s[%d] %s",

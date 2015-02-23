@@ -11,6 +11,8 @@
 #include "rocksdb/slice.h"
 #include "util/string_util.h"
 
+#include <algorithm>
+
 namespace rocksdb {
 
 namespace {

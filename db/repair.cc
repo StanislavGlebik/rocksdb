@@ -280,7 +280,12 @@ class Repairer {
       if (!status.ok()) {
         std::string fname = TableFileName(
             options_.db_paths, t.meta.fd.GetNumber(), t.meta.fd.GetPathId());
+#if !defined(_MSC_VER)
         char file_num_buf[kFormatFileNumberBufSize];
+#else
+        char* file_num_buf =
+          static_cast<char*>(alloca(kFormatFileNumberBufSize));
+#endif
         FormatFileNumber(t.meta.fd.GetNumber(), t.meta.fd.GetPathId(),
                          file_num_buf, sizeof(file_num_buf));
         Log(InfoLogLevel::WARN_LEVEL, options_.info_log,

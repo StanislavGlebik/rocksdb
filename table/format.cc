@@ -316,7 +316,7 @@ Status ReadBlockContents(RandomAccessFile* file, const Footer& footer,
     // trivially allocated stack buffer instead of needing a full malloc()
     used_buf = &stack_buf[0];
   } else {
-    heap_buf = std::unique_ptr<char[]>(new char[n + kBlockTrailerSize]);
+    heap_buf.reset(new char[n + kBlockTrailerSize]);
     used_buf = heap_buf.get();
   }
 
@@ -340,7 +340,7 @@ Status ReadBlockContents(RandomAccessFile* file, const Footer& footer,
   }
 
   if (used_buf == &stack_buf[0]) {
-    heap_buf = std::unique_ptr<char[]>(new char[n]);
+    heap_buf.reset(new char[n]);
     memcpy(heap_buf.get(), stack_buf, n);
   }
 
@@ -364,7 +364,7 @@ Status UncompressBlockContents(const char* data, size_t n,
   switch (data[n]) {
     case kSnappyCompression: {
       size_t ulength = 0;
-      static char snappy_corrupt_msg[] =
+      static char* snappy_corrupt_msg =
         "Snappy not supported or corrupted Snappy compressed block contents";
       if (!Snappy_GetUncompressedLength(data, n, &ulength)) {
         return Status::Corruption(snappy_corrupt_msg);
@@ -381,9 +381,7 @@ Status UncompressBlockContents(const char* data, size_t n,
           data, n, &decompress_size,
           GetCompressFormatForVersion(kZlibCompression, format_version)));
       if (!ubuf) {
-        static char zlib_corrupt_msg[] =
-          "Zlib not supported or corrupted Zlib compressed block contents";
-        return Status::Corruption(zlib_corrupt_msg);
+        return Status::Corruption("Zlib not supported or corrupted Zlib compressed block contents");
       }
       *contents =
           BlockContents(std::move(ubuf), decompress_size, true, kNoCompression);
@@ -393,9 +391,7 @@ Status UncompressBlockContents(const char* data, size_t n,
           data, n, &decompress_size,
           GetCompressFormatForVersion(kBZip2Compression, format_version)));
       if (!ubuf) {
-        static char bzip2_corrupt_msg[] =
-          "Bzip2 not supported or corrupted Bzip2 compressed block contents";
-        return Status::Corruption(bzip2_corrupt_msg);
+        return Status::Corruption("Bzip2 not supported or corrupted Bzip2 compressed block contents");
       }
       *contents =
           BlockContents(std::move(ubuf), decompress_size, true, kNoCompression);
@@ -405,9 +401,7 @@ Status UncompressBlockContents(const char* data, size_t n,
           data, n, &decompress_size,
           GetCompressFormatForVersion(kLZ4Compression, format_version)));
       if (!ubuf) {
-        static char lz4_corrupt_msg[] =
-          "LZ4 not supported or corrupted LZ4 compressed block contents";
-        return Status::Corruption(lz4_corrupt_msg);
+        return Status::Corruption("LZ4 not supported or corrupted LZ4 compressed block contents");
       }
       *contents =
           BlockContents(std::move(ubuf), decompress_size, true, kNoCompression);
@@ -417,9 +411,7 @@ Status UncompressBlockContents(const char* data, size_t n,
           data, n, &decompress_size,
           GetCompressFormatForVersion(kLZ4HCCompression, format_version)));
       if (!ubuf) {
-        static char lz4hc_corrupt_msg[] =
-          "LZ4HC not supported or corrupted LZ4HC compressed block contents";
-        return Status::Corruption(lz4hc_corrupt_msg);
+        return Status::Corruption("LZ4HC not supported or corrupted LZ4HC compressed block contents");
       }
       *contents =
           BlockContents(std::move(ubuf), decompress_size, true, kNoCompression);

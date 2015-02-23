@@ -33,6 +33,7 @@
 #else
   #include <endian.h>
 #endif
+#include <sys/time.h>
 #include <pthread.h>
 
 #include <stdint.h>

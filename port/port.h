@@ -19,4 +19,8 @@
 #include "port/port_posix.h"
 #endif
 
+#if defined(ROCKSDB_PLATFORM_WIN)
+#include "port/port_win.h"
+#endif
+
 #endif  // STORAGE_LEVELDB_PORT_PORT_H_

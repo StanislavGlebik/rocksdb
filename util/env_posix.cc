@@ -24,7 +24,6 @@
 #include <sys/statfs.h>
 #include <sys/syscall.h>
 #endif
-#include <sys/time.h>
 #include <sys/types.h>
 #include <time.h>
 #include <unistd.h>
