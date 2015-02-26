@@ -507,5 +507,8 @@ bool CuckooTableBuilder::MakeSpaceForKey(
   return null_found;
 }
 
+const uint32_t CuckooTableBuilder::kMaxVectorIdx =
+  std::numeric_limits<int32_t>::max();
+
 }  // namespace rocksdb
 #endif  // ROCKSDB_LITE

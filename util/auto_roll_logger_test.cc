@@ -11,8 +11,17 @@
 #include <algorithm>
 #include "util/testharness.h"
 #include "util/auto_roll_logger.h"
+
+#ifdef ROCKSDB_PLATFORM_POSIX
 #include "util/posix_logger.h"
+#endif // ROCKSDB_PLATFORM_POSIX
+
+#ifdef ROCKSDB_PLATFORM_WIN
+#include "util/windows_logger.h"
+#endif // ROCKSDB_PLATFORM_WIN
+
 #include "rocksdb/db.h"
+#include "rocksdb/port.h"
 #include <sys/stat.h>
 #include <errno.h>
 
@@ -207,7 +216,14 @@ TEST(AutoRollLoggerTest, CreateLoggerFromOptions) {
 
   // Normal logger
   ASSERT_OK(CreateLoggerFromOptions(kTestDir, "", env, options, &logger));
+
+#ifdef ROCKSDB_PLATFORM_POSIX
   ASSERT_TRUE(dynamic_cast<PosixLogger*>(logger.get()));
+#endif // ROCKSDB_PLATFORM_POSIX
+
+#ifdef ROCKSDB_PLATFORM_WIN
+  ASSERT_TRUE(dynamic_cast<WindowsLogger*>(logger.get()));
+#endif // ROCKSDB_PLATFORM_WIN
 
   // Only roll by size
   InitTestDb();

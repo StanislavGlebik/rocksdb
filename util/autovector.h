@@ -239,7 +239,7 @@ class autovector {
     }
   }
 
-  void push_back(const T& item) { push_back(value_type(item)); }
+  void push_back(const T& item) { push_back(std::move(value_type(item))); }
 
   template <class... Args>
   void emplace_back(Args&&... args) {

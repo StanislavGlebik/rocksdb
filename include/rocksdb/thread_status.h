@@ -15,6 +15,7 @@
 
 #include <cstddef>
 #include <string>
+#include <stdint.h>
 
 #ifndef ROCKSDB_USING_THREAD_STATUS
 #define ROCKSDB_USING_THREAD_STATUS \

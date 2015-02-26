@@ -8,7 +8,7 @@
 #include "util/testharness.h"
 #include "util/logging.h"
 #include <map>
-#include <unistd.h>
+#include "port/port.h"
 
 namespace rocksdb {
 
@@ -18,7 +18,8 @@ typedef std::map<std::string, std::string> KVMap;
 
 enum BatchOperation {
   PUT = 0,
-  DELETE = 1
+  // TODO(stash): 
+  DELETION = 1
 };
 }
 
@@ -127,7 +128,7 @@ class TtlTest {
         case PUT:
           batch.Put(kv_it_->first, kv_it_->second);
           break;
-        case DELETE:
+        case DELETION:
           batch.Delete(kv_it_->first);
           break;
         default:
@@ -504,7 +505,13 @@ TEST(TtlTest, ReadOnlyPresentForever) {
 // Puts all kvs in kvmap_ in a batch and writes first, then deletes first half
 TEST(TtlTest, WriteBatchTest) {
   MakeKVMap(kSampleSize_);
+#if !defined(_MSC_VER)
   BatchOperation batch_ops[kSampleSize_];
+#else
+  BatchOperation* batch_ops =
+    static_cast<BatchOperation*>(alloca(kSampleSize_));
+#endif
+
   for (int i = 0; i < kSampleSize_; i++) {
     batch_ops[i] = PUT;
   }
@@ -512,7 +519,7 @@ TEST(TtlTest, WriteBatchTest) {
   OpenTtl(2);
   MakePutWriteBatch(batch_ops, kSampleSize_);
   for (int i = 0; i < kSampleSize_ / 2; i++) {
-    batch_ops[i] = DELETE;
+    batch_ops[i] = DELETION;
   }
   MakePutWriteBatch(batch_ops, kSampleSize_ / 2);
   SleepCompactCheck(0, 0, kSampleSize_ / 2, false);

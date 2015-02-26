@@ -94,7 +94,7 @@ class AutoRollLogger : public Logger {
   port::Mutex mutex_;
 };
 
-// Facade to craete logger automatically
+// Facade to create logger automatically
 Status CreateLoggerFromOptions(
     const std::string& dbname,
     const std::string& db_log_dir,

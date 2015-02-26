@@ -16,6 +16,7 @@
 #undef FAILED
 #undef GetCurrentTime
 #undef DeleteFile // TODO(stash): check it!!!
+#define sleep Sleep
 
 // extern int snprintf(char *str, size_t size, const char *format, ...);
 

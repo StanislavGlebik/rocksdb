@@ -146,12 +146,14 @@ TEST(CuckooBuilderTest, WriteSuccessNoCollisionFullKey) {
   uint32_t num_hash_fun = 4;
   std::vector<std::string> user_keys = {"key01", "key02", "key03", "key04"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1, 2, 3}},
     {user_keys[1], {1, 2, 3, 4}},
     {user_keys[2], {2, 3, 4, 5}},
     {user_keys[3], {3, 4, 5, 6}}
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {0, 1, 2, 3};
   std::vector<std::string> keys;
   for (auto& user_key : user_keys) {
@@ -186,12 +188,14 @@ TEST(CuckooBuilderTest, WriteSuccessWithCollisionFullKey) {
   uint32_t num_hash_fun = 4;
   std::vector<std::string> user_keys = {"key01", "key02", "key03", "key04"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1, 2, 3}},
     {user_keys[1], {0, 1, 2, 3}},
     {user_keys[2], {0, 1, 2, 3}},
     {user_keys[3], {0, 1, 2, 3}},
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {0, 1, 2, 3};
   std::vector<std::string> keys;
   for (auto& user_key : user_keys) {
@@ -226,12 +230,14 @@ TEST(CuckooBuilderTest, WriteSuccessWithCollisionAndCuckooBlock) {
   uint32_t num_hash_fun = 4;
   std::vector<std::string> user_keys = {"key01", "key02", "key03", "key04"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1, 2, 3}},
     {user_keys[1], {0, 1, 2, 3}},
     {user_keys[2], {0, 1, 2, 3}},
     {user_keys[3], {0, 1, 2, 3}},
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {0, 1, 2, 3};
   std::vector<std::string> keys;
   for (auto& user_key : user_keys) {
@@ -272,13 +278,15 @@ TEST(CuckooBuilderTest, WithCollisionPathFullKey) {
   std::vector<std::string> user_keys = {"key01", "key02", "key03",
     "key04", "key05"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04", "v05"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1}},
     {user_keys[1], {1, 2}},
     {user_keys[2], {2, 3}},
     {user_keys[3], {3, 4}},
     {user_keys[4], {0, 2}},
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {0, 1, 3, 4, 2};
   std::vector<std::string> keys;
   for (auto& user_key : user_keys) {
@@ -314,13 +322,15 @@ TEST(CuckooBuilderTest, WithCollisionPathFullKeyAndCuckooBlock) {
   std::vector<std::string> user_keys = {"key01", "key02", "key03",
     "key04", "key05"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04", "v05"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1}},
     {user_keys[1], {1, 2}},
     {user_keys[2], {3, 4}},
     {user_keys[3], {4, 5}},
     {user_keys[4], {0, 3}},
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {2, 1, 3, 4, 0};
   std::vector<std::string> keys;
   for (auto& user_key : user_keys) {
@@ -355,12 +365,14 @@ TEST(CuckooBuilderTest, WriteSuccessNoCollisionUserKey) {
   uint32_t num_hash_fun = 4;
   std::vector<std::string> user_keys = {"key01", "key02", "key03", "key04"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1, 2, 3}},
     {user_keys[1], {1, 2, 3, 4}},
     {user_keys[2], {2, 3, 4, 5}},
     {user_keys[3], {3, 4, 5, 6}}
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {0, 1, 2, 3};
   uint64_t expected_table_size = NextPowOf2(user_keys.size() / kHashTableRatio);
 
@@ -391,12 +403,14 @@ TEST(CuckooBuilderTest, WriteSuccessWithCollisionUserKey) {
   uint32_t num_hash_fun = 4;
   std::vector<std::string> user_keys = {"key01", "key02", "key03", "key04"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1, 2, 3}},
     {user_keys[1], {0, 1, 2, 3}},
     {user_keys[2], {0, 1, 2, 3}},
     {user_keys[3], {0, 1, 2, 3}},
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {0, 1, 2, 3};
   uint64_t expected_table_size = NextPowOf2(user_keys.size() / kHashTableRatio);
 
@@ -428,13 +442,15 @@ TEST(CuckooBuilderTest, WithCollisionPathUserKey) {
   std::vector<std::string> user_keys = {"key01", "key02", "key03",
     "key04", "key05"};
   std::vector<std::string> values = {"v01", "v02", "v03", "v04", "v05"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1}},
     {user_keys[1], {1, 2}},
     {user_keys[2], {2, 3}},
     {user_keys[3], {3, 4}},
     {user_keys[4], {0, 2}},
   };
+  hash_map = new_hash_map;
+
   std::vector<uint64_t> expected_locations = {0, 1, 3, 4, 2};
   uint64_t expected_table_size = NextPowOf2(user_keys.size() / kHashTableRatio);
 
@@ -468,13 +484,14 @@ TEST(CuckooBuilderTest, FailWhenCollisionPathTooLong) {
   uint32_t num_hash_fun = 2;
   std::vector<std::string> user_keys = {"key01", "key02", "key03",
     "key04", "key05"};
-  hash_map = {
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = {
     {user_keys[0], {0, 1}},
     {user_keys[1], {1, 2}},
     {user_keys[2], {2, 3}},
     {user_keys[3], {3, 4}},
     {user_keys[4], {0, 1}},
   };
+  hash_map = new_hash_map;
 
   unique_ptr<WritableFile> writable_file;
   fname = test::TmpDir() + "/WithCollisionPathUserKey";
@@ -492,7 +509,9 @@ TEST(CuckooBuilderTest, FailWhenCollisionPathTooLong) {
 }
 
 TEST(CuckooBuilderTest, FailWhenSameKeyInserted) {
-  hash_map = {{"repeatedkey", {0, 1, 2, 3}}};
+  std::unordered_map<std::string, std::vector<uint64_t> > new_hash_map = { { "repeatedkey", { 0, 1, 2, 3 } } };
+  hash_map = new_hash_map;
+
   uint32_t num_hash_fun = 4;
   std::string user_key = "repeatedkey";
 

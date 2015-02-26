@@ -107,9 +107,9 @@ Status Truncate(Env* env, const std::string& filename, uint64_t length) {
 
 struct FileState {
   std::string filename_;
-  ssize_t pos_;
-  ssize_t pos_at_last_sync_;
-  ssize_t pos_at_last_flush_;
+  uint64_t pos_;
+  uint64_t pos_at_last_sync_;
+  uint64_t pos_at_last_flush_;
 
   explicit FileState(const std::string& filename)
       : filename_(filename),
@@ -336,12 +336,12 @@ class FaultInjectionTestEnv : public EnvWrapper {
 };
 
 Status FileState::DropUnsyncedData(Env* env) const {
-  ssize_t sync_pos = pos_at_last_sync_ == -1 ? 0 : pos_at_last_sync_;
+  uint64_t sync_pos = pos_at_last_sync_ == -1 ? 0 : pos_at_last_sync_;
   return Truncate(env, filename_, sync_pos);
 }
 
 Status FileState::DropRandomUnsyncedData(Env* env, Random* rand) const {
-  ssize_t sync_pos = pos_at_last_sync_ == -1 ? 0 : pos_at_last_sync_;
+  uint64_t sync_pos = pos_at_last_sync_ == -1 ? 0 : pos_at_last_sync_;
   assert(pos_ >= sync_pos);
   int range = static_cast<int>(pos_ - sync_pos);
   uint64_t truncated_size =

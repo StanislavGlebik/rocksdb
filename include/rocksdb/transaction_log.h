@@ -66,6 +66,13 @@ struct BatchResult {
     sequence = batchResult.sequence;
     writeBatchPtr.swap(batchResult.writeBatchPtr);
   }
+
+  BatchResult& operator=(BatchResult&& batchResult)
+  {
+    sequence = batchResult.sequence;
+    writeBatchPtr.swap(batchResult.writeBatchPtr);
+    return *this;
+  }
 };
 
 // A TransactionLogIterator is used to iterate over the transactions in a db.

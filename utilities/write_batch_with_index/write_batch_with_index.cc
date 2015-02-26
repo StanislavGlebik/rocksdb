@@ -306,7 +306,7 @@ struct WriteBatchIndexEntry {
 
   // If this flag appears in the offset, it indicates a key that is smaller
   // than any other entry for the same column family
-  static const size_t kFlagMin = std::numeric_limits<size_t>::max();
+  static const size_t kFlagMin;
 
   size_t offset;           // offset of an entry in write batch's string buffer.
   uint32_t column_family;  // column family of the entry
@@ -706,5 +706,7 @@ int WriteBatchEntryComparator::CompareKey(uint32_t column_family,
     return default_comparator_->Compare(key1, key2);
   }
 }
+
+const size_t WriteBatchIndexEntry::kFlagMin = std::numeric_limits<size_t>::max();
 
 }  // namespace rocksdb

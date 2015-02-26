@@ -8,12 +8,18 @@
 // found in the LICENSE file. See the AUTHORS file for names of contributors.
 
 #include "util/mock_env.h"
+// TODO(stash): make it better
+#ifdef ROCKSDB_PLATFORM_POSIX
 #include <sys/time.h>
+#else
+#include "port/port.h"
+#endif
 #include <algorithm>
 #include <chrono>
 #include "util/rate_limiter.h"
 #include "util/random.h"
 #include "util/murmurhash.h"
+#include "port/port.h"
 
 namespace rocksdb {
 
