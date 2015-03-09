@@ -31,8 +31,17 @@ void LogBuffer::AddLogToBuffer(size_t max_log_size, const char* format,
   if (p < limit) {
     va_list backup_ap;
     va_copy(backup_ap, ap);
+#ifndef OS_WIN
     auto n = vsnprintf(p, limit - p, format, backup_ap);
     assert(n >= 0);
+#else
+    auto n = vsnprintf_s(p, limit - p, _TRUNCATE, format, backup_ap);
+    assert(errno != ERANGE);
+    if (n < 0)
+    {
+      n = limit - p - 1; // TODO(stash): check this!!!!!!!!!!
+    }
+#endif
     p += n;
     va_end(backup_ap);
   }

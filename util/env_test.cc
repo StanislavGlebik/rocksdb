@@ -744,7 +744,18 @@ class TestLogger : public Logger {
     {
       va_list backup_ap;
       va_copy(backup_ap, ap);
+#ifndef OS_WIN
       int n = vsnprintf(new_format, sizeof(new_format) - 1, format, backup_ap);
+      assert(n >= 0);
+#else
+      int n = vsnprintf_s(new_format, sizeof(new_format), _TRUNCATE, format, backup_ap);
+      assert(errno != ERANGE);
+      if (n < 0)
+      {
+        n = sizeof(new_format) - 1; // TODO(stash): check this!!!!!!!!!!
+      }
+#endif
+
       // 48 bytes for extra information + bytes allocated
 
       if (new_format[0] == '[') {
