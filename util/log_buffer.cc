@@ -37,8 +37,7 @@ void LogBuffer::AddLogToBuffer(size_t max_log_size, const char* format,
 #else
     auto n = vsnprintf_s(p, limit - p, _TRUNCATE, format, backup_ap);
     assert(errno != ERANGE);
-    if (n < 0)
-    {
+    if (n < 0) {
       n = limit - p - 1; // TODO(stash): check this!!!!!!!!!!
     }
 #endif

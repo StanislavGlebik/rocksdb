@@ -13,10 +13,15 @@
 #pragma once
 #include <algorithm>
 #include <stdio.h>
-#include <sys/time.h>
 #include <time.h>
 #include <fcntl.h>
+#ifndef OS_WIN
+#include <sys/time.h>
 #include <unistd.h>
+#else
+#include "port/port.h"
+#endif
+
 #ifdef OS_LINUX
 #include <linux/falloc.h>
 #endif
@@ -99,7 +104,17 @@ class PosixLogger : public Logger {
       if (p < limit) {
         va_list backup_ap;
         va_copy(backup_ap, ap);
+#ifndef OS_WIN
         p += vsnprintf(p, limit - p, format, backup_ap);
+#else
+        auto n = vsnprintf_s(p, limit - p, _TRUNCATE, format, backup_ap);
+        assert(errno != ERANGE);
+        if (n < 0) {
+          // Truncate happened
+          n = limit - p - 1; // TODO(stash): check this!!!!!!!!!!
+        }
+        p += n;
+#endif
         va_end(backup_ap);
       }
 

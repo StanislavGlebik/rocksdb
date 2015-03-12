@@ -11,13 +11,11 @@
 #define __attribute__(x)
 #define __thread __declspec(thread)
 
-#define snprintf _snprintf
-
 #undef FAILED
 #undef GetCurrentTime
 #undef DeleteFile // TODO(stash): check it!!!
 #define sleep Sleep
 
-// extern int snprintf(char *str, size_t size, const char *format, ...);
+extern int snprintf(char *str, size_t size, const char *format, ...);
 
 #endif

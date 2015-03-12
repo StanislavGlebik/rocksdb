@@ -827,6 +827,7 @@ class TestLogger2 : public Logger {
     {
       va_list backup_ap;
       va_copy(backup_ap, ap);
+      // TODO(stash): check
       int n = vsnprintf(new_format, sizeof(new_format) - 1, format, backup_ap);
       // 48 bytes for extra information + bytes allocated
       ASSERT_TRUE(
