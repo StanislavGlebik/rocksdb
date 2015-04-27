@@ -79,7 +79,7 @@ void HistogramImpl::Clear() {
   num_ = 0;
   sum_ = 0;
   sum_squares_ = 0;
-  memset(buckets_, 0, sizeof buckets_);
+  buckets_.assign(0);
 }
 
 bool HistogramImpl::Empty() { return sum_squares_ == 0; }
