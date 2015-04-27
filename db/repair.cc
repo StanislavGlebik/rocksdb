@@ -97,7 +97,7 @@ class Repairer {
       }
       Log(InfoLogLevel::WARN_LEVEL, options_.info_log,
           "**** Repaired rocksdb %s; "
-          "recovered %zu files; %" PRIu64
+          "recovered %" PRSIZE_TU " files; %" PRIu64
           "bytes. "
           "Some data may have been lost. "
           "****",

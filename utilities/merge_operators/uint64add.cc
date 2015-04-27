@@ -51,7 +51,7 @@ class UInt64AddOperator : public AssociativeMergeOperator {
     } else if (logger != nullptr) {
       // If value is corrupted, treat it as 0
       Log(InfoLogLevel::ERROR_LEVEL, logger,
-          "uint64 value corruption, size: %zu > %zu",
+          "uint64 value corruption, size: %" PRSIZE_TU " > %" PRSIZE_TU,
           value.size(), sizeof(uint64_t));
     }
 

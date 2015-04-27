@@ -114,7 +114,7 @@ std::string BlockBasedTableFactory::GetPrintableTableOptions() const {
            table_options_.block_cache.get());
   ret.append(buffer);
   if (table_options_.block_cache) {
-    snprintf(buffer, kBufferSize, "  block_cache_size: %zd\n",
+    snprintf(buffer, kBufferSize, "  block_cache_size: %" PRSIZE_TD "\n",
              table_options_.block_cache->GetCapacity());
     ret.append(buffer);
   }
@@ -122,11 +122,11 @@ std::string BlockBasedTableFactory::GetPrintableTableOptions() const {
            table_options_.block_cache_compressed.get());
   ret.append(buffer);
   if (table_options_.block_cache_compressed) {
-    snprintf(buffer, kBufferSize, "  block_cache_compressed_size: %zd\n",
+    snprintf(buffer, kBufferSize, "  block_cache_compressed_size: %" PRSIZE_TD "\n",
              table_options_.block_cache_compressed->GetCapacity());
     ret.append(buffer);
   }
-  snprintf(buffer, kBufferSize, "  block_size: %zd\n",
+  snprintf(buffer, kBufferSize, "  block_size: %" PRSIZE_TD "\n",
            table_options_.block_size);
   ret.append(buffer);
   snprintf(buffer, kBufferSize, "  block_size_deviation: %d\n",

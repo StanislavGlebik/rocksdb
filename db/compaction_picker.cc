@@ -334,8 +334,8 @@ void CompactionPicker::SetupOtherInputs(
       if (expanded1.size() == c->inputs_[1].size() &&
           !FilesInCompaction(expanded1)) {
         Log(InfoLogLevel::INFO_LEVEL, ioptions_.info_log,
-            "[%s] Expanding@%d %zu+%zu (%" PRIu64 "+%" PRIu64
-            " bytes) to %zu+%zu (%" PRIu64 "+%" PRIu64 "bytes)\n",
+            "[%s] Expanding@%d %" PRSIZE_TU "+%" PRSIZE_TU "(%" PRIu64 "+%" PRIu64
+            " bytes) to %" PRSIZE_TU "+%" PRSIZE_TU "(%" PRIu64 "+%" PRIu64 "bytes)\n",
             cf_name.c_str(), level, c->inputs_[0].size(), c->inputs_[1].size(),
             inputs0_size, inputs1_size, expanded0.size(), expanded1.size(),
             expanded0_size, inputs1_size);
@@ -894,7 +894,7 @@ Compaction* UniversalCompactionPicker::PickCompaction(
     return nullptr;
   }
   VersionStorageInfo::FileSummaryStorage tmp;
-  LogToBuffer(log_buffer, 3072, "[%s] Universal: candidate files(%zu): %s\n",
+  LogToBuffer(log_buffer, 3072, "[%s] Universal: candidate files(%" PRSIZE_TU "): %s\n",
               cf_name.c_str(), level_files.size(),
               vstorage->LevelFileSummary(&tmp, kLevel0));
 

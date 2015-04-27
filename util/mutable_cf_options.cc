@@ -78,17 +78,17 @@ uint64_t MutableCFOptions::ExpandedCompactionByteSizeLimit(int level) const {
 
 void MutableCFOptions::Dump(Logger* log) const {
   // Memtable related options
-  Log(log, "                        write_buffer_size: %zu", write_buffer_size);
+  Log(log, "                        write_buffer_size: %" PRSIZE_TU, write_buffer_size);
   Log(log, "                  max_write_buffer_number: %d",
       max_write_buffer_number);
-  Log(log, "                         arena_block_size: %zu", arena_block_size);
+  Log(log, "                         arena_block_size: %" PRSIZE_TU, arena_block_size);
   Log(log, "               memtable_prefix_bloom_bits: %" PRIu32,
       memtable_prefix_bloom_bits);
   Log(log, "             memtable_prefix_bloom_probes: %" PRIu32,
       memtable_prefix_bloom_probes);
-  Log(log, " memtable_prefix_bloom_huge_page_tlb_size: %zu",
+  Log(log, " memtable_prefix_bloom_huge_page_tlb_size: %" PRSIZE_TU,
       memtable_prefix_bloom_huge_page_tlb_size);
-  Log(log, "                    max_successive_merges: %zu",
+  Log(log, "                    max_successive_merges: %" PRSIZE_TU,
       max_successive_merges);
   Log(log, "                           filter_deletes: %d",
       filter_deletes);

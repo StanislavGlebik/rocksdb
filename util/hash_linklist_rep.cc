@@ -594,7 +594,7 @@ void HashLinkListRep::Insert(KeyHandle handle) {
       header->GetNumEntries() ==
           static_cast<uint32_t>(bucket_entries_logging_threshold_)) {
     Info(logger_,
-         "HashLinkedList bucket %zu has more than %d "
+         "HashLinkedList bucket %" PRSIZE_TU " has more than %d "
          "entries. Key to insert: %s",
          GetHash(transformed), header->GetNumEntries(),
          GetLengthPrefixedSlice(x->key).ToString(true).c_str());
