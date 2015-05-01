@@ -86,7 +86,7 @@ ManagedIterator::ManagedIterator(DBImpl* db, const ReadOptions& read_options,
 }
 
 ManagedIterator::~ManagedIterator() {
-  Lock();
+  MILock l(&in_use_, this);
   if (snapshot_created_) {
     db_->ReleaseSnapshot(read_options_.snapshot);
     snapshot_created_ = false;
