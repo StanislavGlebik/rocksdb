@@ -518,9 +518,14 @@ class DBTest {
           option_config_ == kWalDirAndMmapReads) {
         continue;
       }
+      if (option_config_ == kCompressedBlockCache || option_config_ == kHashCuckoo)
+      {
+        // TODO(stash): windows only
+        continue;
+      }
       break;
     }
-
+    //fprintf(stderr, "%d\n", option_config_);
     if (option_config_ >= kEnd) {
       Destroy(last_options_);
       return false;
@@ -581,6 +586,7 @@ class DBTest {
                options_override.skip_policy);
     BlockBasedTableOptions table_options;
     bool set_block_based_table_factory = true;
+
     switch (option_config_) {
       case kHashSkipList:
         options.prefix_extractor.reset(NewFixedPrefixTransform(1));
@@ -1341,7 +1347,7 @@ TEST(DBTest, Empty) {
     ASSERT_TRUE(
         dbfull()->GetProperty("rocksdb.is-file-deletions-enabled", &num));
     ASSERT_EQ("0", num);
-  } while (ChangeOptions());
+  } while (ChangeOptions(kSkipHashCuckoo));
 }
 
 TEST(DBTest, WriteEmptyBatch) {
@@ -8928,7 +8934,9 @@ TEST(DBTest, ManagedTailingIteratorSeekToNext) {
 }
 
 TEST(DBTest, ManagedTailingIteratorDeletes) {
-  CreateAndReopenWithCF({"pikachu"}, CurrentOptions());
+  /*auto options = CurrentOptions();
+  options.disable_auto_compactions = true;*/
+  CreateAndReopenWithCF({ "pikachu" }, CurrentOptions());
   ReadOptions read_options;
   read_options.tailing = true;
   read_options.managed = true;
