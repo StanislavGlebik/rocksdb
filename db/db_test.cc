@@ -7733,7 +7733,14 @@ TEST(DBTest, TransactionLogIteratorCorruptedLog) {
     if (mem_env_) {
       mem_env_->Truncate(logfile_path, wal_files.front()->SizeFileBytes() / 2);
     } else {
-      // TODO(stash): truncate
+      // TODO(stash): truncate for windows
+      HANDLE logFileHandle = CreateFileA(logfile_path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
+        FILE_ATTRIBUTE_NORMAL, NULL);
+      LARGE_INTEGER newLogSize;
+      newLogSize.QuadPart = wal_files.front()->SizeFileBytes() / 2;
+      ASSERT_TRUE(FALSE != SetFilePointerEx(logFileHandle, newLogSize, NULL, FILE_BEGIN));
+      ASSERT_TRUE(FALSE != SetEndOfFile(logFileHandle));
+      CloseHandle(logFileHandle);
       /*ASSERT_EQ(0, truncate(logfile_path.c_str(),
                    wal_files.front()->SizeFileBytes() / 2));*/
     }
@@ -9364,6 +9371,8 @@ TEST(DBTest, RateLimitingTest) {
   }
   elapsed = env_->NowMicros() - start;
   Close();
+  // TODO(stash): GetTotalBytesThrough == 0
+  fprintf(stderr, "%d %d", (int)options.rate_limiter->GetTotalBytesThrough(), (int)env_->bytes_written_);
   ASSERT_TRUE(options.rate_limiter->GetTotalBytesThrough() ==
               env_->bytes_written_);
   double ratio = env_->bytes_written_ * 1000000 / elapsed / raw_rate;

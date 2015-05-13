@@ -79,6 +79,7 @@ class WalManagerTest {
         Put(ToString(k), std::string(1024, 'a'));
       }
     }
+    current_log_writer_.reset(); // TODO(stash): I put it here, because it prevent last log file from deleting.
   }
 
   std::unique_ptr<TransactionLogIterator> OpenTransactionLogIter(
