@@ -9329,6 +9329,7 @@ TEST(DBTest, Level0StopWritesTest) {
 /*
  * This test is not reliable enough as it heavily depends on disk behavior.
  */
+#ifndef OS_WIN
 TEST(DBTest, RateLimitingTest) {
   Options options = CurrentOptions();
   options.write_buffer_size = 1 << 20;         // 1MB
@@ -9399,6 +9400,7 @@ TEST(DBTest, RateLimitingTest) {
   fprintf(stderr, "write rate ratio = %.2lf, expected 0.5\n", ratio);
   ASSERT_TRUE(ratio < 0.6);
 }
+#endif
 
 namespace {
   bool HaveOverlappingKeyRanges(
@@ -9919,7 +9921,7 @@ TEST(DBTest, DynamicMemtableOptions) {
   int count = 0;
   Random rnd(301);
   WriteOptions wo;
-  wo.timeout_hint_us = 1000;
+  wo.timeout_hint_us = 100000;
 
   while (Put(Key(count), RandomString(&rnd, 1024), wo).ok() && count < 256) {
     count++;
