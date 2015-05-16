@@ -518,14 +518,15 @@ class DBTest {
           option_config_ == kWalDirAndMmapReads) {
         continue;
       }
+#ifdef OS_WIN
       if (option_config_ == kCompressedBlockCache || option_config_ == kHashCuckoo)
       {
-        // TODO(stash): windows only
         continue;
       }
+#endif
       break;
     }
-    //fprintf(stderr, "%d\n", option_config_);
+
     if (option_config_ >= kEnd) {
       Destroy(last_options_);
       return false;
@@ -586,7 +587,6 @@ class DBTest {
                options_override.skip_policy);
     BlockBasedTableOptions table_options;
     bool set_block_based_table_factory = true;
-
     switch (option_config_) {
       case kHashSkipList:
         options.prefix_extractor.reset(NewFixedPrefixTransform(1));
@@ -1347,7 +1347,7 @@ TEST(DBTest, Empty) {
     ASSERT_TRUE(
         dbfull()->GetProperty("rocksdb.is-file-deletions-enabled", &num));
     ASSERT_EQ("0", num);
-  } while (ChangeOptions(kSkipHashCuckoo));
+  } while (ChangeOptions());
 }
 
 TEST(DBTest, WriteEmptyBatch) {
@@ -7733,7 +7733,7 @@ TEST(DBTest, TransactionLogIteratorCorruptedLog) {
     if (mem_env_) {
       mem_env_->Truncate(logfile_path, wal_files.front()->SizeFileBytes() / 2);
     } else {
-      // TODO(stash): truncate for windows
+#ifdef OS_WIN
       HANDLE logFileHandle = CreateFileA(logfile_path.c_str(), GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING,
         FILE_ATTRIBUTE_NORMAL, NULL);
       LARGE_INTEGER newLogSize;
@@ -7741,8 +7741,10 @@ TEST(DBTest, TransactionLogIteratorCorruptedLog) {
       ASSERT_TRUE(FALSE != SetFilePointerEx(logFileHandle, newLogSize, NULL, FILE_BEGIN));
       ASSERT_TRUE(FALSE != SetEndOfFile(logFileHandle));
       CloseHandle(logFileHandle);
-      /*ASSERT_EQ(0, truncate(logfile_path.c_str(),
-                   wal_files.front()->SizeFileBytes() / 2));*/
+#else
+      ASSERT_EQ(0, truncate(logfile_path.c_str(),
+        wal_files.front()->SizeFileBytes() / 2));
+#endif
     }
 
     // Insert a new entry to a new log file
@@ -8941,8 +8943,6 @@ TEST(DBTest, ManagedTailingIteratorSeekToNext) {
 }
 
 TEST(DBTest, ManagedTailingIteratorDeletes) {
-  /*auto options = CurrentOptions();
-  options.disable_auto_compactions = true;*/
   CreateAndReopenWithCF({ "pikachu" }, CurrentOptions());
   ReadOptions read_options;
   read_options.tailing = true;
