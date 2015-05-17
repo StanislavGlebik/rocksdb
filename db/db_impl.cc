@@ -1729,7 +1729,7 @@ Status DBImpl::FlushMemTable(ColumnFamilyData* cfd,
     }
 
     WriteThread::Writer w(&mutex_);
-    s = write_thread_.EnterWriteThread(&w, 0, env_);
+    s = write_thread_.EnterWriteThread(&w, 0);
     assert(s.ok() && !w.done);  // No timeout and nobody should do our job
 
     // SetNewMemtableAndNewLogFile() will release and reacquire mutex
@@ -2664,7 +2664,7 @@ Status DBImpl::CreateColumnFamily(const ColumnFamilyOptions& cf_options,
     Options opt(db_options_, cf_options);
     {  // write thread
       WriteThread::Writer w(&mutex_);
-      s = write_thread_.EnterWriteThread(&w, 0, env_);
+      s = write_thread_.EnterWriteThread(&w, 0);
       assert(s.ok() && !w.done);  // No timeout and nobody should do our job
       // LogAndApply will both write the creation in MANIFEST and create
       // ColumnFamilyData object
@@ -2726,7 +2726,7 @@ Status DBImpl::DropColumnFamily(ColumnFamilyHandle* column_family) {
     if (s.ok()) {
       // we drop column family from a single write thread
       WriteThread::Writer w(&mutex_);
-      s = write_thread_.EnterWriteThread(&w, 0, env_);
+      s = write_thread_.EnterWriteThread(&w, 0);
       assert(s.ok() && !w.done);  // No timeout and nobody should do our job
       s = versions_->LogAndApply(cfd, *cfd->GetLatestMutableCFOptions(),
                                  &edit, &mutex_);
@@ -3022,7 +3022,7 @@ Status DBImpl::Write(const WriteOptions& write_options, WriteBatch* my_batch) {
     default_cf_internal_stats_->AddDBStats(InternalStats::WRITE_WITH_WAL, 1);
   }
 
-  Status status = write_thread_.EnterWriteThread(&w, expiration_time, env_);
+  Status status = write_thread_.EnterWriteThread(&w, expiration_time);
   assert(status.ok() || status.IsTimedOut());
   if (status.IsTimedOut()) {
     mutex_.Unlock();

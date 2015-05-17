@@ -58,7 +58,7 @@ class WriteThread {
   // uint64_t expiration_time: maximum time to be in the queue
   // See also: ExitWriteThread
   // REQUIRES: db mutex held
-  Status EnterWriteThread(Writer* w, uint64_t expiration_time, Env* env);
+  Status EnterWriteThread(Writer* w, uint64_t expiration_time);
 
   // After doing write job, we need to remove already used writers from
   // writers_ queue and notify head of the queue about it.

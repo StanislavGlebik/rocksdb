@@ -8,7 +8,7 @@
 namespace rocksdb {
 
 Status WriteThread::EnterWriteThread(WriteThread::Writer* w,
-                                     uint64_t expiration_time, Env* env) {
+                                     uint64_t expiration_time) {
   // the following code block pushes the current writer "w" into the writer
   // queue "writers_" and wait until one of the following conditions met:
   // 1. the job of "w" has been done by some other writers.
@@ -27,11 +27,8 @@ Status WriteThread::EnterWriteThread(WriteThread::Writer* w,
         // should wait until the write completes.
         expiration_time = 0;
       } else {
-        if (env->NowMicros() > expiration_time)
-        {
-          timed_out = true;
-          break;
-        }
+        timed_out = true;
+        break;
       }
     }
   }
